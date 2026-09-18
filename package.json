@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start":" DEBUG=dwssr-2026d:* node ./bin/www",
+    "start":" DEBUG=dwssr-2026d:* node ./server/bin/www",
     "greet": "echo 'Hola mundo'"
   },
   "dependencies": {
