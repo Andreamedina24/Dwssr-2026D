@@ -2,6 +2,7 @@
   "name": "dwssr-2026d",
   "version": "0.0.0",
   "private": true,
+  "type":"module",
   "scripts": {
     "start":" DEBUG=dwssr-2026d:* node ./server/bin/www",
     "greet": "echo 'Hola mundo'"
