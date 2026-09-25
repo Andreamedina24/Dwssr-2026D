@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-import app from '../app'
+import app from '../app.js'
 
 //importando debug
 import createDebug from "debug"
