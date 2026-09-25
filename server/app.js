@@ -14,13 +14,13 @@ import cookieParser from 'cookie-parser'
 // x var loggers = requiere('morgan');
 import logger from 'morgan'
 //importando biblioteca de debug
-import createDebug from "debug" //✨
+import createDebug from 'debug' //✨
 //imports para crear dirname
 import { fileURLToPath } from 'node:url'
 import { dirname } from 'node:path'
 
 //cracion del onjeto debug
-const debug =createDebug ('dwssr-2026b:server')//✨
+const debug = createDebug ('dwssr-2026d:server')//✨
 
 // creando variable
 const _filename= fileURLToPath(import.meta.url)
@@ -38,14 +38,17 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
 
 //Configurar middlewares de la aplicacion
+debug("📈creando backend")
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 //Configura la carpeta de los archivos estaticos
+debug(" 💻creando servidor de archivos estaticos")
 app.use(express.static(path.join(__dirname,'..' , 'public')));
 
 //Registramos rutas de la aplicacion
+debug ("🚌registrando rutas")
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
