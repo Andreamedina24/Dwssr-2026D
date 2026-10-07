@@ -38,3 +38,34 @@ export function viteAssets(){
         return''
     }
 }
+
+//leyendo y parseando a JSON el archivo 
+//de manifiesto que genera vite en la compilación
+// de los archivos de front-end
+ const  manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'))
+//Obteniendo la ruta del punto de entrada del front-end
+ const mainEntry= manifest ['main.js']
+ //guarda el main.js
+ if(!mainEntry){
+    console.warn('Archivo main.js no esta disponible en el manifiesto de vite')
+    return''
+ }
+ let tags =''
+ //CSS files
+ if (mainEntry.css){
+    mainEntry.css.forEach(cssFiles =>{
+        tags += `<link rel ="stylesheet"href="/${cssfiles}">\n`
+    });
+ }
+//js files 
+tags+=`<script type="module" src="/${mainEntry.file}"defer></script>`;
+return tags;
+
+/*
+Funcion registradora
+*/
+export function registrerViteHelper(hbs){
+    hbs.registrerHelper('viteAssets',()=>{
+        return new hbs.sefesString(viteAssets())
+    })
+}
