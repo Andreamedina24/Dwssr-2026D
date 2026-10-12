@@ -10,7 +10,11 @@
     "dev:all": "concurrently \"npm run dev\" \"npm run dev:vite\"",
     "build": " vite build",
     "preview": "npm run build && npm start",
-    "greet": "echo 'Hola mundo'"
+    "greet": "echo 'Hola mundo'",
+    "lint:all":"npm run link:back $$ npm run lint:front",
+    "lint:back":"eslint \"server/**/*.js\"",
+    "lint:front":"eslint \"src/**/*.js\"",
+    "line:fix":"eslint . --fix"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
