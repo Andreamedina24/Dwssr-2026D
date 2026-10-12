@@ -53,6 +53,16 @@ app.set('view engine', 'hbs');
 //registro Helper
 registrarViteHelper(hbs)
 
+// INTEGRACIÓN VITE COMO MIDDLEWARE
+if (process.env.NODE_ENV !== 'production') {
+  const { createServer } = await import('vite');
+  const viteDevServer = await createServer({
+    server: { middlewareMode: true },
+    appType: 'custom'
+  });
+  app.use(viteDevServer.middlewares);
+}
+
 // Connfigura los miderwares
 app.use(logger('dev'));
 app.use(express.json());

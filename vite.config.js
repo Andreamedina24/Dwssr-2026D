@@ -7,8 +7,8 @@ import {resolve} from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { dirname } from 'node:path'
 // creando variable
-const _filename= fileURLToPath(import.meta.url)
-const __dirname= dirname(_filename)
+const __filename= fileURLToPath(import.meta.url)
+const __dirname= dirname(__filename)
 
 export default defineConfig({
     //Directorio raix de los archivos fuente del front end
@@ -18,7 +18,12 @@ export default defineConfig({
         //puerto de escucha
         port:5173,
         //Rigidez del puerto
-        strict: true
+        strict: true,
+        strictPort: true,
+        cors: true, 
+        hmr: {
+            clientPort: 443
+        }
     },
     //Configurando el Build
     build:{

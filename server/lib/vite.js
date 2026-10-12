@@ -16,8 +16,10 @@ const __dirname = dirname(__filename)
 export function viteAssets() {
     const isDev = process.env.NODE_ENV !== 'production'
     // Rescatando la url del servidor de desarrollo
-    const viteDevServer = process.env.VITE_DEV_SERVER || 'http://localhost:5173'
-
+    let viteDevServer = process.env.VITE_DEV_SERVER || 'http://localhost:5173'
+    if (process.env.CODESPACE_NAME) {
+        viteDevServer = `https://${process.env.CODESPACE_NAME}-5173.app.github.dev`
+    }
     // si estamos en modo desarrollo
     if (isDev) {
         return `
@@ -37,7 +39,7 @@ export function viteAssets() {
 
     // leyendo y parseando a JSON el archivo manifest
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'))
-    const mainEntry = manifest['main.js']
+    const mainEntry = manifest['main.js'] || manifest['src/main.js']
     
     if (!mainEntry) {
         console.warn('Archivo main.js no está disponible en el manifiesto de vite')
