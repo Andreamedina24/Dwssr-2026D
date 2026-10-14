@@ -1,61 +1,73 @@
 import js from "@eslint/js";
 import globals from "globals";
 import { defineConfig } from "eslint/config";
- 
+
 export default defineConfig([
-  //1)ignora losn build de front
+  // 1) Ignora los builds de front y dependencias
   {
-    ignores:[
-      "dist/**",//ignora carpeta de dist
+    ignores: [
+      "dist/**",
       "node_modules/**"
     ]
   },
-  //2)config del back-end
-  { files: ["server/**/*.{js,mjs}"],
+  // 2) Configuración del back-end
+  {
+    files: ["server/**/*.{js,mjs}"],
     plugins: { js },
     extends: ["js/recommended"],
     languageOptions: {
-      ecmaVersion:"latest",
-      sourceType:"module",
+      ecmaVersion: "latest",
+      sourceType: "module",
       globals: {
-      ...globals.node}
-  }
-},
-//2.1)config del back-end
-  { files: ["vite.config.js"],
+        ...globals.node
+      }
+    },
+    rules: {
+      "no-unused-vars": [
+        "error",
+        {
+          "argsIgnorePattern": "^_*"
+        }
+      ]
+    }
+  },
+  // 2.1) Configuración para vite.config.js
+  {
+    files: ["vite.config.js"],
     plugins: { js },
     extends: ["js/recommended"],
     languageOptions: {
-      ecmaVersion:"latest",
-      sourceType:"module",
+      ecmaVersion: "latest",
+      sourceType: "module",
       globals: {
-      ...globals.node}
-  }
-},
-  //3)config del Front-end
+        ...globals.node
+      }
+    }
+  },
+  // 3) Configuración del front-end
   {
     files: ["src/**/*.{js,mjs}"],
     plugins: { js },
     extends: ["js/recommended"],
-    languageOptions:{
-      ecmaVersion:"latest",
-      sourceType:"module",
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
       globals: {
-      ...globals.browser
+        ...globals.browser
+      }
     }
-  }
-},
-  //4)Opcional si hay js en public
+  },
+  // 4) Opcional si hay JS en public
   {
     files: ["public/**/*.{js,mjs}"],
     plugins: { js },
     extends: ["js/recommended"],
-    languageOptions:{
-      ecmaVersion:"latest",
-      sourceType:"module",
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
       globals: {
-      ...globals.browser
+        ...globals.browser
+      }
     }
   }
-},
 ]);
