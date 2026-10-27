@@ -1,10 +1,11 @@
-import express from 'express'
+import express from 'express';
+
 const router = express.Router();
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
+router.get('/', (req, res, _next) => {
   res.send('respond with a resource ');
 });
 
-//module.exports = router;
+// module.exports = router;
 export default router;
