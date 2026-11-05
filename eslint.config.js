@@ -25,6 +25,7 @@ export default defineConfig([
     '.vscode/**',
     '.github/**',
     '*.config.js',
+    'README.md',
   ]),
   {
     files: ['**/*.{js,mjs}'],
@@ -35,7 +36,9 @@ export default defineConfig([
       sourceType: 'module',
     },
     settings: {
-      'import-x/resolver-next': [plugins.importX.plugins['import-x'].createNodeResolver()],
+      'import-x/resolver-next': [
+        plugins.importX.plugins['import-x'].createNodeResolver(),
+      ],
     },
   },
   ...airbnbBase,
@@ -57,17 +60,14 @@ export default defineConfig([
       // ESM en Node exige la extensión .js en imports relativos
       'import-x/extensions': ['error', 'ignorePackages'],
       'import-x/no-unresolved': ['error', { ignore: ['^#'] }],
-      'import-x/no-extraneous-dependencies': [
-        'error',
-        { devDependencies: [] },
-      ],
+      'import-x/no-extraneous-dependencies': ['error', { devDependencies: [] }],
     },
   },
   {
     files: ['src/**/*.{js,mjs}'],
     rules: {
-      'no-console': ['warn', { allow: ['warn', 'error', 'info'] }]
-    }
+      'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
+    },
   },
   // Siempre al final: desactiva reglas que chocan con Prettier
   prettier,

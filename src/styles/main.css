@@ -1,8 +1,16 @@
-body{
-    padding: 50px;
-    font: 14px "Lucida Grande", Helvetica,
-    Arial, sans-serif;
+@import 'tailwindcss';
+
+/* 
+  Línea que informa a Tailwind dónde están
+  las vistas de nuestra aplicación 
+*/
+@source "../../server/views/**/*.hbs";
+
+p {
+  margin-top: 20px;
 }
-h1{
-    color: #00b7ff
+
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
