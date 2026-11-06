@@ -4,15 +4,13 @@
  * Module dependencies.
  */
 
-import http from 'node:http';
 // importando debug
-import createDebug from 'debug';
+import createdebug from 'debug';
+import http from 'node:http';
 import app from '../app.js';
 
-// var debug = require('debug')('dwssr-2026d:server');
-
-// creacion del onjeto debug
-const debug = createDebug('dwssr-2026d:server');
+// creacion del debug
+const debug = createdebug('dwssr-2026d:server');
 
 /**
  * Normalize a port into a number, string, or false.
@@ -40,11 +38,6 @@ const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
 
 /**
- * Create HTTP server.
- */
-const server = http.createServer(app);
-
-/**
  * Event listener for HTTP server "error" event.
  */
 function onError(error) {
@@ -52,15 +45,16 @@ function onError(error) {
     throw error;
   }
 
-  const bind = typeof port === 'string'
-    ? `pipe ${port}`// 'Pipe ' + port
-    : `port ${port}`; // 'port' + port;
+  const bind =
+    typeof port === 'string'
+      ? `pipe${port}` //'Pipe ' + port
+      : `port${port}`; //'Port ' + port;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
       // eslint-disable-next-line no-console
-      console.error(`${bind} requires ele`);
+      console.error(`${bind} requires element`);
       process.exit(1);
       break;
     case 'EADDRINUSE':
@@ -74,14 +68,20 @@ function onError(error) {
 }
 
 /**
+ * Create HTTP server.
+ */
+const server = http.createServer(app);
+
+/**
  * Event listener for HTTP server "listening" event.
  */
 function onListening() {
   const addr = server.address();
-  const bind = typeof addr === 'string'
-    ? `pipe ${addr}` // pipe + addr
-    : `port ${addr.port}`; // port + addr. port
-  debug(`💻Listening on ${bind}`);
+  const bind =
+    typeof addr === 'string'
+      ? `pipe ${addr}` //'pipe ' + addr
+      : `port ${addr.port}`; //'port ' + addr.port;
+  debug(`💻 Listening on ${bind}`);
 }
 
 /**

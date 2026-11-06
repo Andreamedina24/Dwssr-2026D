@@ -1,20 +1,19 @@
+// Importando el core de winston
+import winston, { format } from 'winston';
 // Importando bibliotecas de node
 import path from 'node:path';
 import fs from 'node:fs';
-// Importando el core de winston y format
-import winston, { format } from 'winston';
-// Importando plug-in de winston para rotación de archivos
+// Importando plug-in de winston
 import DailyRotateFile from 'winston-daily-rotate-file';
 
 // Desestructurar funciones utiles de format
-const {
-  combine, timestamp, label, printf, colorize,
-} = format;
+const { combine, timestamp, label, printf, colorize, prettyPrint } = format;
 
-// Creando variable del directorio raiz y de logs
-const rootDir = path.resolve(process.cwd());
-const logsDir = path.join(rootDir, 'logs');
+// Creando variable del directorio raiz
+const rootdir = path.resolve(process.cwd());
 
+// Creando directorio de Logs
+const logsDir = path.join(rootdir, 'logs');
 if (!fs.existsSync(logsDir)) {
   fs.mkdirSync(logsDir, { recursive: true });
 }
@@ -31,6 +30,8 @@ const colors = {
 // Agregando ese esquema a winston
 winston.addColors(colors);
 
+// Creando plantillas para los formatos
+
 // Formato de consola
 const myConsoleFormat = combine(
   // Colores del formato
@@ -41,7 +42,8 @@ const myConsoleFormat = combine(
   timestamp({ format: 'DD-MM-YYYY HH:mm:ss' }),
   // Función de impresion
   printf(
-    (info) => `${info.level} ► ${info.label} ► ${info.timestamp} ► ${info.message}`,
+    (info) =>
+      `${info.level} ► ${info.label} ► ${info.timestamp} ► ${info.message}`,
   ),
 );
 
@@ -51,11 +53,11 @@ const myFileFormat = combine(
   format.uncolorize(),
   // Agregar fecha ISO
   timestamp(),
-  // Salida JSON
+  // Salida
   format.json(),
 );
 
-// Opciones de configuración para los transports de logs
+// Construyendo y configurando transportes
 const options = {
   errorFile: {
     level: 'error',
@@ -63,6 +65,11 @@ const options = {
     maxsize: 5242880, // 5MB
     maxFiles: 2,
     format: myFileFormat,
+  },
+  console: {
+    level: 'debug',
+    handleExceptions: true,
+    format: myConsoleFormat,
   },
   readableFile: {
     level: 'info',
@@ -72,10 +79,11 @@ const options = {
     format: combine(
       format.uncolorize(),
       timestamp({ format: 'DD-MM-YYYY HH:mm:ss' }),
-      printf((info) => `[${info.level}] : ${info.timestamp} : ${info.message}`),
+      prettyPrint(),
     ),
   },
-  dailyRotate: {
+  dailyRotateFile: {
+    level: 'info',
     filename: path.join(logsDir, 'app-%DATE%.log'),
     datePattern: 'YYYY-MM-DD',
     zippedArchive: true,
@@ -85,17 +93,23 @@ const options = {
   },
 };
 
-// Creando el logger de Winston
+// Creando el logger
 const logger = winston.createLogger({
-  level: 'debug',
-  levels: winston.config.npm.levels,
   transports: [
-    new winston.transports.Console({
-      format: myConsoleFormat,
-    }),
-    new winston.transports.File(options.errorFile),
+    new DailyRotateFile(options.dailyRotateFile),
     new winston.transports.File(options.readableFile),
-    new DailyRotateFile(options.dailyRotate),
+    new winston.transports.File(options.errorFile),
+    new winston.transports.Console(options.console),
+  ],
+  exceptionHandlers: [
+    new winston.transports.File({
+      filename: path.join(logsDir, 'exceptions.log'),
+    }),
+  ],
+  rejectionHandlers: [
+    new winston.transports.File({
+      filename: path.join(logsDir, 'rejections.log'),
+    }),
   ],
   exitOnError: false,
 });

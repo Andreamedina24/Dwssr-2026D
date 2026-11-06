@@ -8,55 +8,29 @@ import path, { dirname } from 'node:path';
 import cookieParser from 'cookie-parser';
 // Importa modulos para manejar logs
 import morgan from 'morgan';
-// Importando biblioteca de debug
-//import createDebug from 'debug';
 // Imports para crear Dirname
 import { fileURLToPath } from 'node:url';
-// Importando el template engine Handlebars
-import hbs from 'hbs';
 
 // Importar las rutas de la aplicacion
-// eslint-disable-next-line import-x/no-rename-default
+//var indexRouter = require('./routes/index');
 import indexRouter from '#routes/index.js';
-// eslint-disable-next-line import-x/no-rename-default
+//var usersRouter = require('./routes/users');
 import usersRouter from '#routes/users.js';
-// Importando el registrador del helper
-import { registrarViteHelper } from './lib/vite.js';
+// Importando la funcion de configuracion de Hbs
+import configureHandlebars from './lib/handlebars.js';
 // Importando la configuracion de winston logger
- 
 import logger from './lib/winston.js';
 
-// Creacion del objeto Debug
-//const debug = createDebug('dwssr-2026b:server');
 // Creando la variables de rutas
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // Crear la aplicacion express
-//debug('🔨 Creando backend');
 logger.info('🔨 Creando backend');
 const app = express();
 
 // Configurar el motor de vistas con hbs
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
-
-// Registro Helper
-registrarViteHelper(hbs);
-
-// ==========================================
-// INTEGRACIÓN VITE COMO MIDDLEWARE
-// ==========================================
-if (process.env.NODE_ENV !== 'production') {
-  // eslint-disable-next-line import-x/no-extraneous-dependencies
-  const { createServer } = await import('vite');
-  const viteDevServer = await createServer({
-    server: { middlewareMode: true },
-    appType: 'custom',
-  });
-  app.use(viteDevServer.middlewares);
-}
-// ==========================================
+configureHandlebars(app);
 
 // Configurar middlewares de la aplicacion
 app.use(
@@ -77,12 +51,10 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // Configurar la carpeta de archivos estaticos
-//debug('🔨 Creando servidor de Archivos Estáticos');
 logger.info('🔨 Creando servidor de Archivos Estáticos');
 app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Registramos las rutas de la aplicacion
-//debug('🛣️ Registrando rutas');
 logger.info('🛣️ Registrando rutas');
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -94,11 +66,14 @@ app.use((req, res, next) => {
 
 // Manejador de errores
 app.use((err, req, res, _next) => {
+  // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
+  // render the error page
   res.status(err.status || 500);
   res.render('error');
 });
 
+// module.exports = app;
 export default app;
